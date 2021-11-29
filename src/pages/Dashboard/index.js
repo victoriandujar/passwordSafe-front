@@ -6,7 +6,6 @@ import { Container } from './styles';
 function Dashboard() {
     return (
         <Container>
-            <p>Dashboard</p>
             <UsersList />
         </Container>
     )
