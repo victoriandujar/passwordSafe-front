@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { authLogin } from '../../store/fetchActions';
 
 import PasswordSafe from '../../assets/pass.svg';
 
 import { Container } from './styles';
-
 function Login() {
     const [ form, setForm ] = useState({ username: '', password: '' });
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     function changeForm(e) {
@@ -25,6 +24,7 @@ function Login() {
 		dispatch(authLogin(form));
 
 		setForm({ username: '', password: '' });
+        navigate('/dashboard');
 	}
 
     return (
