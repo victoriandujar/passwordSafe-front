@@ -60,9 +60,9 @@ export default function UsersList() {
                 <p>Id: {JSON.stringify(users.id)}</p>
                 <p>Nome: {JSON.stringify(users.name)}</p>
                 <p>Email: {JSON.stringify(users.email)}</p>
+                <h3 style={{ fontWeight: 'bold' }}>Senhas Cadastradas</h3>
                 {users.passwords?.map((a) => (
                   <div>
-                    <h3 style={{ fontWeight: 'bold' }}>Senhas Cadastradas</h3>
                     <p>Id: {JSON.stringify(a.id)}</p>
                     <p>Nome: {JSON.stringify(a.name)}</p>
                     <p>Senha: {JSON.stringify(a.password)}</p>

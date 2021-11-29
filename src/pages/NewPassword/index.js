@@ -2,17 +2,31 @@ import React from 'react'
 
 import { Breadcrumb, Layout, Menu, Input, Form, message, Button } from 'antd';
 import api from '../../services/api';
+import { useNavigate } from 'react-router';
 
 const { Header, Content, Footer } = Layout;
 
 export default function NewPassword() {
-    function onFormPassword(value) {
+    const navigate = useNavigate();
+    async function onFormPassword(value) {
+        const token = localStorage.getItem('token')        
+        const response = await api.get("/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const { data } = response;
         try {
-            api.post('/users/1/password', value); 
+            api.post('/users/'+ data.id +'/password', value,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }); 
             message.success("Senha criada com sucesso!");
         } catch(err) {
             message.error("Houve um erro ao criar a senha");
         }
+        navigate('/dashboard') 
     }
 
     return (
