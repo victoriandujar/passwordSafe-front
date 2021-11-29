@@ -13,7 +13,7 @@ export const Container = styled.div`
       align-items: center;
 
       img {
-          margin-bottom: 15px;
+          margin-bottom: 5px;
       }
   }
 
@@ -24,19 +24,23 @@ export const Container = styled.div`
   form {
       display: flex;
       flex-direction: column;
-      margin-top: 40px;
+      margin-top: 20px;
       width: 100%;
-      max-width: 450px;
+      max-width: 480px;
 
       input {
           margin-top: 10px;
-          padding: 16px;
+          padding: 13px;
           border: none;
           background: #fff;     
           width: 100%; 
           box-shadow: 3px 6px 6px -9px rgba(87,87,87,0.69); 
           border-radius: 5px;
       }
+  }
+
+  h4 {
+      margin-top: 15px;
   }
 
   button {
@@ -56,7 +60,7 @@ export const Container = styled.div`
 
   .link {
       text-align: center;
-      margin-top: 50px;
+      margin-top: 15px;
       
       a {
         text-decoration: none;
