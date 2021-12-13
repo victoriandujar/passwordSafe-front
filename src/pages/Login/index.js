@@ -7,6 +7,7 @@ import { authLogin } from '../../store/fetchActions';
 import PasswordSafe from '../../assets/pass.svg';
 
 import { Container } from './styles';
+
 function Login() {
     const [ form, setForm ] = useState({ username: '', password: '' });
     const navigate = useNavigate();
@@ -21,10 +22,15 @@ function Login() {
     function submitForm(e) {
 		e.preventDefault();
 
-		dispatch(authLogin(form));
+		dispatch(authLogin(form)).then(() => {
+           const token = localStorage.getItem('token');
+
+           if(token) {
+            navigate('/dashboard');
+           }
+        });
 
 		setForm({ username: '', password: '' });
-        navigate('/dashboard');
 	}
 
     return (
