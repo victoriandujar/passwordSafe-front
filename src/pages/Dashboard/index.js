@@ -16,7 +16,7 @@ function Dashboard() {
 
     return (
         <Container>
-            {token ? <UsersList /> : ''}
+            <UsersList />
         </Container>
     )
 }

@@ -14,10 +14,9 @@ export default function UsersList() {
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
   const [user, setUser] = useState();
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
-
-  console.log(user);
 
   useEffect(() => {
     async function loadUsers() {
@@ -28,16 +27,19 @@ export default function UsersList() {
       console.log(_user)
       setUser(_user);
       setIsAdmin(JSON.parse(_user.userDetails).autorizacao.includes("ROLE_ADMIN"))
-
-      const response = await api.get("/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const { data } = response;
-
-      setUsers(data);
-      setLoading(false);
+      try {
+        const response = await api.get("/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const { data } = response;
+  
+        setUsers(data);
+        setLoading(false);
+      } catch {
+        setError(true);
+      }
     }
 
     loadUsers();
@@ -63,7 +65,7 @@ export default function UsersList() {
           <Breadcrumb.Item>Senhas e Usuários</Breadcrumb.Item>
         </Breadcrumb>
         <div className="site-layout-content">
-          {loading ? (
+          {loading && !error ? (
             'Carregando...'
           ) :
             <div>
@@ -71,7 +73,7 @@ export default function UsersList() {
               <p>Id: {users?.id}</p>
               <p>Nome: {users?.name}</p>
               <p>Email: {users?.email}</p>
-              {isAdmin ? (
+              {isAdmin && !error ? (
                 <>
                   <h3 style={{ fontWeight: 'bold' }}>Senhas Cadastradas</h3>
                   {users?.passwords?.map((a) => (
@@ -84,7 +86,7 @@ export default function UsersList() {
                 </>
               ) : ''}
             </div>}
-          {isAdmin ?
+          {isAdmin && !error ?
             <Space>
               <Button type="primary">
                 <Link to="/createPassword">
