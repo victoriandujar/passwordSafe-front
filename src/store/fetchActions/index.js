@@ -1,3 +1,6 @@
+/* eslint-disable no-lone-blocks */
+import { message } from 'antd';
+
 import api from '../../services/api';
 
 import { login, signUp } from '../modules/auth';
@@ -5,15 +8,19 @@ import { addMessage } from '../modules/layout';
 
 export const authLogin = (user) => {
 	return (dispatch) => {
-		api
+		return api
 			.post('/login', user)
 			.then((res) => {
 				localStorage.setItem('token', res.data.token);
 				dispatch(login());
+				message.success(`Login realizado com sucesso! ${res.data.name} - ${res.data.autorizacao}`);
 			})
 			.catch((error) => {
-				const { message } = error.response.data;
-				dispatch(addMessage(message));
+				message.error('Não foi possível realizar o login');
+				
+				if(error.response?.status === 401) {
+					message.error('Você excedeu tentativas máximas de login.');
+				}
 			});
 	};
 };

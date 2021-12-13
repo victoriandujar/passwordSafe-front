@@ -1,17 +1,23 @@
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Breadcrumb, Button, Layout, Menu, Space } from 'antd';
 
 import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+
 import api from '../../services/api';
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 export default function UsersList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState();
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
   const [user, setUser] = useState();
+
+  const navigate = useNavigate();
+
+  console.log(user);
 
   useEffect(() => {
     async function loadUsers() {
@@ -37,48 +43,65 @@ export default function UsersList() {
     loadUsers();
   }, []);
 
+  function logout() {
+    localStorage.removeItem('token');
+
+    navigate('/dashboard');
+  }
+
   return (
-    <>
-      <Layout className="layout">
-        <Header>
-          <div className="logo" />
-          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          <Menu.Item key="1">Home</Menu.Item>
-          </Menu>
-        </Header>
-        <Content style={{ padding: '0 50px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Senhas</Breadcrumb.Item>
-          </Breadcrumb>
-          <div className="site-layout-content">
-            {loading ? (
-              'Carregando...'
-            ) :
-              <div>
-                <h3 style={{ fontWeight: 'bold' }}>Usuário</h3>
-                <p>Id: {JSON.stringify(users.id)}</p>
-                <p>Nome: {JSON.stringify(users.name)}</p>
-                <p>Email: {JSON.stringify(users.email)}</p>
-                <h3 style={{ fontWeight: 'bold' }}>Senhas Cadastradas</h3>
-                {users.passwords?.map((a) => (
-                  <div>
-                    <p>Id: {JSON.stringify(a.id)}</p>
-                    <p>Nome: {JSON.stringify(a.name)}</p>
-                    <p>Senha: {JSON.stringify(a.password)}</p>
-                  </div>
-                ))}
-              </div>}
-            {isAdmin &&
-              <button>
+
+    <Layout>
+      <div className="logo" />
+      <Menu mode="horizontal" defaultSelectedKeys={['2']}>
+        <Menu.Item key="1">Home</Menu.Item>
+      </Menu>
+
+      <Content style={{ padding: '0 50px' }}>
+        <Breadcrumb style={{ margin: '16px 0' }}>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>Senhas e Usuários</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="site-layout-content">
+          {loading ? (
+            'Carregando...'
+          ) :
+            <div>
+              <h3 style={{ fontWeight: 'bold' }}>Usuário</h3>
+              <p>Id: {users?.id}</p>
+              <p>Nome: {users?.name}</p>
+              <p>Email: {users?.email}</p>
+              {isAdmin ? (
+                <>
+                  <h3 style={{ fontWeight: 'bold' }}>Senhas Cadastradas</h3>
+                  {users?.passwords?.map((a) => (
+                    <div key={a.id}>
+                      <p>Id: {a?.id}</p>
+                      <p>Nome: {a?.name}</p>
+                      <p>Senha: {a?.password}</p>
+                    </div>
+                  ))}
+                </>
+              ) : ''}
+            </div>}
+          {isAdmin ?
+            <Space>
+              <Button type="primary">
                 <Link to="/createPassword">
                   Crie uma nova senha
                 </Link>
-              </button>}
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>Password Safe - 2021</Footer>
-      </Layout>
-    </>
+              </Button>
+              <Button type="primary">
+                <Link to="/newUser">
+                  Crie novo usuário
+                </Link>
+              </Button>
+            </Space> : ''}
+        </div>
+
+        <Button type="primary" onClick={logout}>Sair</Button>
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>Password Safe - 2021</Footer>
+    </Layout>
   );
 }
